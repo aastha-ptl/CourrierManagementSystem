@@ -1,0 +1,176 @@
+const ExcelJS = require("exceljs");
+
+async function generateReportExcel(couriers, filters, res) {
+  const { startDate, endDate, status, branch, branchName } = filters;
+
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet("Courier Report");
+
+  // Set column widths
+  worksheet.getColumn(1).width = 15; // Tracking ID
+  worksheet.getColumn(2).width = 20; // Sender Name
+  worksheet.getColumn(3).width = 15; // Sender Phone
+  worksheet.getColumn(4).width = 20; // Receiver Name
+  worksheet.getColumn(5).width = 15; // Receiver Phone
+  worksheet.getColumn(6).width = 25; // Origin Branch
+  worksheet.getColumn(7).width = 25; // Destination Branch
+  worksheet.getColumn(8).width = 20; // Status
+  worksheet.getColumn(9).width = 12; // Weight
+  worksheet.getColumn(10).width = 15; // Price
+  worksheet.getColumn(11).width = 15; // Booking Date
+  worksheet.getColumn(12).width = 15; // Delivery Date
+
+  // Add Report Title
+  worksheet.mergeCells('A1:L1');
+  const titleCell = worksheet.getCell('A1');
+  titleCell.value = "Courier Report";
+  titleCell.font = { bold: true, size: 16, color: { argb: "FFFFFFFF" } };
+  titleCell.alignment = { vertical: 'middle', horizontal: 'center' };
+  titleCell.fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: 'FFC76C3F' }
+  };
+  worksheet.getRow(1).height = 30;
+
+  // Helper function to format date as dd-mm-yyyy
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "N/A";
+    const d = new Date(dateStr);
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const year = d.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  let currentRow = 2;
+
+  // Add Date Range
+  if (startDate && endDate) {
+    const dateRow = worksheet.getRow(currentRow);
+    dateRow.getCell(1).value = "Date Range:";
+    dateRow.getCell(1).font = { bold: true };
+    dateRow.getCell(2).value = `${formatDate(startDate)} to ${formatDate(endDate)}`;
+    worksheet.mergeCells(`B${currentRow}:D${currentRow}`);
+    dateRow.height = 20;
+    currentRow++;
+  }
+
+  // Add Status Filter (if specific status selected)
+  if (status && status !== "All") {
+    const statusRow = worksheet.getRow(currentRow);
+    statusRow.getCell(1).value = "Status:";
+    statusRow.getCell(1).font = { bold: true };
+    statusRow.getCell(2).value = status;
+    statusRow.height = 20;
+    currentRow++;
+  }
+
+  // Add Total Couriers
+  const totalRow = worksheet.getRow(currentRow);
+  totalRow.getCell(1).value = "Total Couriers:";
+  totalRow.getCell(1).font = { bold: true };
+  totalRow.getCell(1).alignment = { wrapText: false };
+  totalRow.getCell(2).value = couriers.length;
+  totalRow.getCell(2).alignment = { horizontal: 'left' };
+  totalRow.height = 20;
+  currentRow++;
+
+  // Add empty row
+  currentRow++;
+  worksheet.addRow([]);
+
+  // Add header row
+  currentRow++;
+  const headerRow = worksheet.getRow(currentRow);
+  headerRow.values = [
+    "Tracking ID",
+    "Sender Name",
+    "Sender Phone",
+    "Receiver Name",
+    "Receiver Phone",
+    "Origin Branch",
+    "Destination Branch",
+    "Status",
+    "Weight (kg)",
+    "Total Price (Rs)",
+    "Booking Date",
+    "Delivery Date"
+  ];
+  
+  headerRow.height = 20;
+
+  // Style header cells
+  for (let col = 1; col <= 12; col++) {
+    const cell = headerRow.getCell(col);
+    cell.font = { bold: true, color: { argb: "FFFFFFFF" } };
+    cell.fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "FFC76C3F" },
+    };
+    cell.alignment = { vertical: "middle", horizontal: "center" };
+    cell.border = {
+      top: { style: "thin", color: { argb: "FFC76C3F" } },
+      left: { style: "thin", color: { argb: "FFC76C3F" } },
+      bottom: { style: "thin", color: { argb: "FFC76C3F" } },
+      right: { style: "thin", color: { argb: "FFC76C3F" } },
+    };
+  }
+
+  // Add data rows
+  couriers.forEach((courier, index) => {
+    const row = worksheet.addRow([
+      courier.trackingId || "N/A",
+      courier.sender?.name || "N/A",
+      courier.sender?.phone || "N/A",
+      courier.receiver?.name || "N/A",
+      courier.receiver?.phone || "N/A",
+      courier.originBranch?.branchName || "N/A",
+      courier.destinationBranch?.branchName || "N/A",
+      courier.status || "N/A",
+      courier.weight || 0,
+      courier.price || 0,
+      formatDate(courier.createdAt),
+      courier.status === "Delivered" && courier.deliveryDate
+        ? formatDate(courier.deliveryDate)
+        : "-",
+    ]);
+
+    // Add borders and alignment
+    row.alignment = { vertical: "middle", horizontal: "left" };
+    row.eachCell((cell) => {
+      cell.border = {
+        top: { style: "thin", color: { argb: "FFD3D3D3" } },
+        left: { style: "thin", color: { argb: "FFD3D3D3" } },
+        bottom: { style: "thin", color: { argb: "FFD3D3D3" } },
+        right: { style: "thin", color: { argb: "FFD3D3D3" } },
+      };
+    });
+
+    // Alternating row colors
+    if (index % 2 === 0) {
+      row.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FFF9F9F9" },
+      };
+    }
+  });
+
+  // Set response headers
+  res.setHeader(
+    "Content-Type",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  );
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename=courier_report_${Date.now()}.xlsx`
+  );
+
+  // Write to response
+  await workbook.xlsx.write(res);
+  res.end();
+}
+
+module.exports = generateReportExcel;

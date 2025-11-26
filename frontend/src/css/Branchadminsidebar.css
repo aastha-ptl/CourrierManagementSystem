@@ -1,0 +1,117 @@
+/* Branch Admin Sidebar */
+
+.branch-admin-sidebar {
+    background-color: #8B4513; /* SaddleBrown wood base */
+    color: #F5F5DC; /* Beige text */
+    width: 260px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+/* Sidebar header */
+.branch-admin-sidebar .sidebar-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Sidebar nav links */
+.branch-admin-sidebar .nav-link {
+    color: #F5F5DC;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+    user-select: none;
+    text-decoration: none;
+    margin-bottom: 12px; /* Vertical space between links */
+}
+
+/* Remove bottom margin on last link in each nav group */
+.branch-admin-sidebar ul.nav > li:last-child > .nav-link,
+.branch-admin-sidebar ul.nav ul li:last-child > .nav-link {
+    margin-bottom: 0;
+}
+
+/* Active & hover states */
+.branch-admin-sidebar .nav-link.active,
+.branch-admin-sidebar .nav-link:hover {
+    background-color: #A0522D; /* Sienna warm hover */
+    color: #F5F5DC;
+}
+
+/* Dropdown toggles */
+.branch-admin-sidebar .dropdown-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px 15px;
+    color: #F5F5DC;
+    user-select: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    margin-bottom: 12px; /* Space below dropdown toggle */
+}
+
+.branch-admin-sidebar .dropdown-toggle:hover {
+    background-color: #A0522D;
+}
+
+/* Dropdown menus */
+.branch-admin-sidebar ul.dropdown-menu {
+    list-style: none;
+    padding-left: 1rem;
+    margin-top: 0.5rem;
+}
+
+/* Dropdown items */
+.branch-admin-sidebar ul.dropdown-menu .nav-link {
+    padding: 8px 15px;
+    font-size: 0.95rem;
+    margin-bottom: 8px; /* Space between dropdown submenu items */
+}
+
+/* Remove margin bottom on last dropdown item */
+.branch-admin-sidebar ul.dropdown-menu .nav-link:last-child {
+    margin-bottom: 0;
+}
+
+/* Sidebar bottom profile/settings section */
+.branch-admin-sidebar .sidebar-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid #5C3317; /* Darker wood divider */
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .branch-admin-sidebar {
+        width: 100%;
+        height: auto;
+        position: absolute;
+        top: 50px;
+        left: 0;
+        box-shadow: none;
+        z-index: 1100;
+    }
+}
+
+/* Optional: style for active nav-link using Bootstrap secondary color */
+.branch-admin-sidebar .nav-link.bg-secondary {
+    background-color: #6c757d !important;
+}

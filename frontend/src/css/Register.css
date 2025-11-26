@@ -1,0 +1,135 @@
+.register-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background-image: url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80');
+  background-size: cover;
+  background-position: center;
+}
+.header{
+    color:#C76C3F;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.form-wrapper {
+  position: relative;
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  padding: 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+.form-group-custom {
+  margin-bottom: 15px;
+}
+
+.form-group-custom label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 7px;
+  color: #333;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon input {
+  width: 100%;
+  padding: 10px 40px 10px 12px; 
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.3);  
+  color: #333;
+  backdrop-filter: blur(4px); 
+  transition: border 0.3s, background-color 0.3s;
+}
+.input-with-icon input:focus {
+  border: 1px solid #C76C3F;
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.4); 
+}
+
+.input-with-icon input::placeholder {
+  color: #555;
+}
+
+
+.show-password-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #C76C3F;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #C76C3F ;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color:#C76C3F;
+}
+
+.login-redirect {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+.login-redirect a {
+  color:#C76C3F;
+  text-decoration: none;
+  font-weight: bold;
+}
+.forgot-password-link{
+  color:gray;
+  text-decoration: none;
+
+}
